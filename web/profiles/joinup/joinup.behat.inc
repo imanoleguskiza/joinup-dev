@@ -2189,7 +2189,7 @@ class JoinupSubContext extends DrupalSubContextBase {
     if (in_array($type, ['collection', 'solution'])) {
       $entity_type_id = 'rdf_entity';
     }
-    elseif (in_array($type, CommunityContentHelper::getBundles())) {
+    elseif (in_array($type, CommunityContentHelper::BUNDLES)) {
       $entity_type_id = 'node';
     }
     else {
@@ -2406,9 +2406,9 @@ JS;
       throw new Exception("Unsupported type {$type}.");
     }
 
-    $user = $this->getUserByName($user);
+    $user_entity = $this->getUserByName($user);
     $group = $this->getEntityByLabel('rdf_entity', $group_label, $group_bundle);
-    $og_membership = $this->getMembershipByGroupAndUser($group, $user);
+    $og_membership = $this->getMembershipByGroupAndUser($group, $user_entity);
 
     $bundles = $this->explodeCommaSeparatedStepArgument($bundles);
     $bundles = array_map(function ($bundle) use ($type) {

@@ -354,6 +354,13 @@ function joinup_core_post_update_install_tallinn() {
 }
 
 /**
+ * Enable the Message digest module.
+ */
+function joinup_core_post_update_install_message_digest() {
+  \Drupal::service('module_installer')->install(['message_digest']);
+}
+
+/**
  * Migrate from Piwik to Matomo.
  */
 function joinup_core_post_update_install_piwik2matomo() {
