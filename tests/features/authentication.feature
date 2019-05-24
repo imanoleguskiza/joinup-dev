@@ -38,12 +38,11 @@ Feature: User authentication
       | admin/content                                                  |
       | admin/content/rdf                                              |
       | admin/people                                                   |
+      | admin/reporting/export-user-list                               |
       | admin/reporting/group-administrators/rdf_entity/collection     |
       | admin/reporting/group-administrators/rdf_entity/collection/csv |
       | admin/structure                                                |
       | admin/structure/views                                          |
-      | propose/collection                                             |
-      | propose/solution                                               |
       | dashboard                                                      |
       | licence                                                        |
       | licence/add                                                    |
@@ -54,6 +53,8 @@ Feature: User authentication
       | node/add/document                                              |
       | node/add/event                                                 |
       | node/add/news                                                  |
+      | propose/collection                                             |
+      | propose/solution                                               |
       | rdf_entity/add                                                 |
       | rdf_entity/add/asset_distribution                              |
       | rdf_entity/add/asset_release                                   |
@@ -62,6 +63,8 @@ Feature: User authentication
       | rdf_entity/add/licence                                         |
       | rdf_entity/add/owner                                           |
       | rdf_entity/add/solution                                        |
+      | user/subscriptions                                             |
+      | user/subscription-settings                                     |
 
   @api
   Scenario Outline: Authenticated user can access pages they are authorized to
@@ -69,11 +72,13 @@ Feature: User authentication
     Then I visit "<path>"
 
     Examples:
-      | path                |
-      | propose/collection  |
-      | collections         |
-      | user                |
-      | joinup/legal-notice |
+      | path                       |
+      | collections                |
+      | joinup/legal-notice        |
+      | propose/collection         |
+      | user                       |
+      | user/subscription-settings |
+      | user/subscriptions         |
 
   @api
   Scenario Outline: Authenticated user cannot access site administration
@@ -88,6 +93,7 @@ Feature: User authentication
       | admin/content                                                  |
       | admin/content/rdf                                              |
       | admin/people                                                   |
+      | admin/reporting/export-user-list                               |
       | admin/reporting/group-administrators/rdf_entity/collection     |
       | admin/reporting/group-administrators/rdf_entity/collection/csv |
       | admin/structure                                                |
@@ -121,6 +127,7 @@ Feature: User authentication
       | path                                                           |
       | admin/people                                                   |
       | admin/content/rdf                                              |
+      | admin/reporting/export-user-list                               |
       | admin/reporting/group-administrators/rdf_entity/collection     |
       | admin/reporting/group-administrators/rdf_entity/collection/csv |
       | dashboard                                                      |

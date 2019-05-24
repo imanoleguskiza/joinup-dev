@@ -15,6 +15,7 @@ use Drupal\joinup_discussion\Event\DiscussionDeleteEvent;
 use Drupal\joinup_discussion\Event\DiscussionUpdateEvent;
 use Drupal\joinup_discussion\Event\DiscussionEvents;
 use Drupal\joinup_notification\JoinupMessageDeliveryInterface;
+use Drupal\joinup_notification\MessageArgumentGenerator;
 use Drupal\joinup_subscription\JoinupSubscriptionInterface;
 use Drupal\node\NodeInterface;
 use Drupal\rdf_entity\RdfInterface;
@@ -188,8 +189,7 @@ class SubscribedDiscussionSubscriber implements EventSubscriberInterface {
 
     $group = $this->getDiscussionGroup($discussion);
     if ($group) {
-      $arguments['@group:label'] = $group->label();
-      $arguments['@group:bundle'] = $group->bundle();
+      $arguments += MessageArgumentGenerator::getGroupArguments($group);
     }
 
     return $arguments;
@@ -229,11 +229,17 @@ class SubscribedDiscussionSubscriber implements EventSubscriberInterface {
    */
   protected function sendMessage(NodeInterface $discussion, string $message_template): bool {
     try {
-      return $this->messageDelivery
-        ->createMessage($message_template)
-        ->setArguments($this->getArguments($discussion))
-        ->setRecipients($this->getSubscribers($discussion))
-        ->sendMail();
+      $success = TRUE;
+      // Create individual messages for each subscriber so that we can honor the
+      // user's chosen digest frequency.
+      foreach ($this->getSubscribers($discussion) as $subscriber) {
+        $notifier_options = [
+          'entity_type' => $discussion->getEntityTypeId(),
+          'entity_id' => $discussion->id(),
+        ];
+        $success = $this->messageDelivery->sendMessageTemplateToUser($message_template, $this->getArguments($discussion), $subscriber, $notifier_options, TRUE) && $success;
+      }
+      return $success;
     }
     catch (\Exception $e) {
       $context = ['exception' => $e];
